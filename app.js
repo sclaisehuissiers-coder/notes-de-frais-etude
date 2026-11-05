@@ -132,8 +132,20 @@ async function depuisFichier(f) {
 }
 
 /* ---------- Réglages ---------- */
+// Accepte aussi un lien « enveloppé » par Gmail/Outlook (google.com/url?q=…, safelinks…) ou encodé
+function nettoyerLien(brut) {
+  let v = String(brut || '').replace(/\s+/g, '');
+  for (let i = 0; i < 3; i++) {
+    const m = /[?&](?:q|url|u)=(https?%3A[^&]+|https?:[^&]+)/i.exec(v);
+    if (m && !/^https:\/\/script\.google/.test(v)) { v = decodeURIComponent(m[1]); continue; }
+    break;
+  }
+  if (/%3D|%3F|%26/i.test(v)) { try { v = decodeURIComponent(v); } catch {} }
+  const n = /(https:\/\/script\.google(?:usercontent)?\.com\/macros\/s\/[\w-]+\/exec\?k=[\w-]+)/.exec(v);
+  return n ? n[1] : v;
+}
 async function tester() {
-  const v = $('lien').value.trim(); const info = $('infoReglages');
+  const v = nettoyerLien($('lien').value); $('lien').value = v; const info = $('infoReglages');
   if (!/^https:\/\/script\.google(usercontent)?\.com\/.+\?.*k=/.test(v)) { info.innerHTML = '<span class="rouge">Lien non reconnu.</span>'; return; }
   enregistrerLien(v); info.textContent = 'Test de la liaison…';
   try {

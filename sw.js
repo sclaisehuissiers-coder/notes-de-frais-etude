@@ -1,5 +1,5 @@
 // Mise en cache de l'application pour un démarrage hors connexion
-const VERSION = 'ndf-v4';
+const VERSION = 'ndf-v5';
 const FICHIERS = ['./', './index.html', './app.js', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'];
 
