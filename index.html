@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>NOTES DE FRAIS ETUDE</title>
+<meta name="theme-color" content="#0055A4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Notes de frais">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+  :root { --or:#EF4135; --nuit:#1B2A4A; --ok:#1FA855; --err:#D7263D; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; height:100%; background:#000; color:#fff;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; overflow:hidden; }
+  header { position:fixed; top:0; left:0; right:0; z-index:5; display:flex; align-items:center; gap:10px;
+    padding:calc(env(safe-area-inset-top) + 8px) 14px 10px; background:linear-gradient(135deg,#1E6FD9,#002E7A); }
+  header img { width:30px; height:30px; border-radius:7px; }
+  header h1 { font-size:16px; letter-spacing:.5px; margin:0; flex:1; font-weight:800; }
+  header button { background:none; border:0; color:#fff; font-size:24px; padding:4px 6px; }
+  #viseur { position:fixed; inset:0; width:100%; height:100%; object-fit:cover; background:#111; }
+  #flash { position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; transition:opacity .25s; z-index:4; }
+  #bas { position:fixed; left:0; right:0; bottom:0; z-index:5; padding:16px 16px calc(env(safe-area-inset-bottom) + 18px);
+    background:linear-gradient(transparent,rgba(0,0,0,.75) 40%); display:flex; flex-direction:column; align-items:center; gap:12px; }
+  #etat { font-size:14px; text-align:center; min-height:20px; text-shadow:0 1px 3px #000; }
+  #ligne { display:flex; align-items:center; justify-content:space-between; width:100%; max-width:420px; }
+  #declencheur { width:84px; height:84px; border-radius:50%; border:6px solid #fff; background:var(--or);
+    box-shadow:0 0 0 4px rgba(239,65,53,.45); }
+  #declencheur:active { transform:scale(.92); }
+  .petit { width:56px; height:56px; border-radius:50%; border:0; background:rgba(255,255,255,.18); color:#fff; font-size:24px; }
+  #compteur { position:relative; }
+  #compteur span { position:absolute; top:-4px; right:-4px; min-width:22px; height:22px; border-radius:11px; padding:0 6px;
+    background:var(--err); font-size:13px; line-height:22px; font-weight:700; display:none; }
+  #reglages { position:fixed; inset:0; z-index:10; background:#101826; display:none; overflow:auto;
+    padding:calc(env(safe-area-inset-top) + 20px) 20px 40px; }
+  #reglages h2 { margin-top:0; }
+  #reglages textarea { width:100%; height:110px; font-size:14px; border-radius:10px; border:0; padding:10px; }
+  .btn { display:block; width:100%; margin-top:12px; padding:14px; font-size:16px; font-weight:700; border:0; border-radius:12px;
+    background:var(--or); color:#fff; }
+  .btn.sec { background:#2C3B5C; }
+  #infoReglages { margin-top:14px; font-size:14px; line-height:1.4; color:#cfd8e6; white-space:pre-line; }
+  #accueil { position:fixed; inset:0; z-index:3; display:none; align-items:center; justify-content:center; text-align:center;
+    padding:30px; background:#111; color:#ccc; font-size:15px; }
+  .vert { color:#5BE38C; } .rouge { color:#FF8A95; }
+</style>
+</head>
+<body>
+<header>
+  <img src="icons/icon-192.png" alt="">
+  <h1>NOTES DE FRAIS ETUDE</h1>
+  <button id="btnReglages" aria-label="Réglages">⚙︎</button>
+</header>
+
+<video id="viseur" playsinline autoplay muted></video>
+<div id="accueil"></div>
+<div id="flash"></div>
+
+<div id="bas">
+  <div id="etat">Démarrage…</div>
+  <div id="ligne">
+    <button class="petit" id="btnSysteme" aria-label="Appareil photo du téléphone">📷</button>
+    <button id="declencheur" aria-label="Prendre la photo"></button>
+    <button class="petit" id="compteur" aria-label="Relancer les envois">⇪<span id="nbAttente">0</span></button>
+  </div>
+</div>
+<input type="file" id="fichier" accept="image/*" capture="environment" hidden>
+
+<div id="reglages">
+  <h2>Réglages</h2>
+  <p>Collez le <b>lien de configuration</b> (adresse du script Google se terminant par <code>?k=…</code>). Cette opération n'est faite qu'une seule fois.</p>
+  <textarea id="lien" placeholder="https://script.google.com/macros/s/…/exec?k=…"></textarea>
+  <button class="btn" id="btnEnregistrer">Enregistrer et tester la liaison</button>
+  <button class="btn sec" id="btnFermer">Fermer</button>
+  <div id="infoReglages"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

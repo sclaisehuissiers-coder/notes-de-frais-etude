@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E6FD9"/>
+      <stop offset="1" stop-color="#002E7A"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- ticket de caisse -->
+  <path d="M262 170 H702 V820 l-55 -45 -55 45 -55 -45 -55 45 -55 -45 -55 45 -55 -45 -55 45 Z"
+        fill="#FFFFFF" transform="rotate(-6 482 495)"/>
+  <g transform="rotate(-6 482 495)" fill="#EF4135">
+    <text x="482" y="560" font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold"
+          font-size="380" text-anchor="middle">€</text>
+    <rect x="322" y="240" width="320" height="34" rx="17" fill="#0055A4"/>
+    <rect x="322" y="630" width="250" height="28" rx="14" fill="#0055A4" opacity=".55"/>
+    <rect x="322" y="690" width="180" height="28" rx="14" fill="#0055A4" opacity=".55"/>
+  </g>
+  <!-- pastille appareil photo -->
+  <circle cx="742" cy="742" r="190" fill="#EF4135" stroke="#FFFFFF" stroke-width="22"/>
+  <rect x="632" y="680" width="220" height="150" rx="28" fill="#FFFFFF"/>
+  <rect x="690" y="650" width="90" height="44" rx="12" fill="#FFFFFF"/>
+  <circle cx="742" cy="755" r="52" fill="#EF4135"/>
+  <circle cx="742" cy="755" r="30" fill="#1E6FD9"/>
+</svg>
