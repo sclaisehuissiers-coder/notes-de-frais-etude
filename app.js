@@ -12,6 +12,13 @@ const etat = (txt, cls) => { const e = $('etat'); e.textContent = txt; e.classNa
 /* ---------- Configuration ---------- */
 function lien() { try { return localStorage.getItem('ndf_lien') || LIEN_PAR_DEFAUT; } catch { return LIEN_PAR_DEFAUT; } }
 function enregistrerLien(v) { try { localStorage.setItem('ndf_lien', v); } catch {} }
+function expediteur() { try { return localStorage.getItem('ndf_utilisateur') || ''; } catch { return ''; } }
+function enregistrerExpediteur(v) { try { localStorage.setItem('ndf_utilisateur', v || ''); } catch {} afficherExpediteur(); }
+function afficherExpediteur() { const e = $('expediteur'); if (e) e.textContent = expediteur() ? 'Expéditeur : ' + expediteur() : ''; }
+async function identifier() {
+  const url = lien(); if (!url || !navigator.onLine) return;
+  try { const j = await (await fetch(url)).json(); if (j.ok && j.utilisateur) enregistrerExpediteur(j.utilisateur); } catch {}
+}
 (function lireLienDansAdresse() {
   const m = /[#?&]cfg=([^&]+)/.exec(location.href);
   if (m) { enregistrerLien(decodeURIComponent(m[1])); history.replaceState(null, '', location.pathname); }
@@ -69,9 +76,10 @@ async function envoyerTout() {
       const rep = await fetch(url, { method: 'POST', body: corps, headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
       const j = await rep.json();
       if (!j.ok) throw new Error(j.error || 'refus du serveur');
+      if (j.utilisateur && j.utilisateur !== expediteur()) enregistrerExpediteur(j.utilisateur);
       await retirer(it.filename); await majCompteur();
     }
-    etat(`✓ Enregistré dans Google Drive (${liste.length})`, 'vert');
+    etat(`✓ Enregistré dans Google Drive (${liste.length})${expediteur() ? ' — ' + expediteur() : ''}`, 'vert');
   } catch (e) {
     const n = await majCompteur();
     etat(`Envoi interrompu (${e.message}) — ${n} en attente, nouvel essai automatique`, 'rouge');
@@ -130,7 +138,8 @@ async function tester() {
   enregistrerLien(v); info.textContent = 'Test de la liaison…';
   try {
     const j = await (await fetch(v)).json();
-    info.innerHTML = j.ok ? `<span class="vert">✓ Liaison établie avec le Drive de ${j.compte}</span>` : `<span class="rouge">Refus : ${j.error}</span>`;
+    if (j.ok) enregistrerExpediteur(j.utilisateur || '');
+    info.innerHTML = j.ok ? `<span class="vert">✓ Liaison établie avec le Drive de ${j.compte}${j.utilisateur ? '\nExpéditeur identifié : ' + j.utilisateur : ''}</span>` : `<span class="rouge">Refus : ${j.error}</span>`;
     if (j.ok) envoyerTout();
   } catch (e) { info.innerHTML = `<span class="rouge">Échec du test : ${e.message}</span>`; }
 }
@@ -149,5 +158,7 @@ document.addEventListener('visibilitychange', () => {
 });
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
+afficherExpediteur();
+if (lien() && !expediteur()) identifier();
 demarrerCamera();
 majCompteur().then(() => { if (!lien()) { $('btnReglages').click(); } envoyerTout(); });
